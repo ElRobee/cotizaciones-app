@@ -152,7 +152,6 @@ const CotizacionesApp = () => {
   // Estados para modales y edición
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState('');
-  const [editingItem, setEditingItem] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   
   // Estados para notificaciones
