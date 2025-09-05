@@ -341,7 +341,7 @@ const CotizacionesApp = () => {
     
     // Agregar botones de acción
     setTimeout(() => {
-      if (confirm('¿Deseas imprimir o descargar como PDF?')) {
+      if (window.confirm('¿Deseas imprimir o descargar como PDF?')) {
         printWindow.print();
       }
     }, 500);
@@ -910,7 +910,7 @@ const CotizacionesApp = () => {
                         className="text-purple-600 hover:text-purple-800 p-1 hover:bg-purple-100 rounded"
                         title="Imprimir/PDF"
                       >
-                        <Print className="w-4 h-4" />
+                        <FileText className="w-4 h-4" />
                       </button>
                       <button 
                         className="text-blue-600 hover:text-blue-800 p-1 hover:bg-blue-100 rounded"
