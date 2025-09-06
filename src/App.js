@@ -1,4 +1,47 @@
-onKeyDown={(e) => e.stopPropagation()}
+import React, { useState, useEffect } from 'react';
+import { 
+  FileText, 
+  Users, 
+  Settings, 
+  BarChart3, 
+  Plus, 
+  Edit2, 
+  Trash2, 
+  Save,
+  LogOut,
+  Building2,
+  Calculator,
+  Search,
+  Eye,
+  Filter,
+  FileSpreadsheet,
+  CheckCircle,
+  AlertCircle,
+  Info,
+  X,
+  Send,
+  MessageCircle,
+  RefreshCw,
+  Mail,
+  TrendingUp,
+  Calendar,
+  DollarSign,
+  Clock,
+  Download,
+  Upload,
+  Palette,
+  Shield,
+  FileBarChart,
+  Bell,
+  Moon,
+  Sun,
+  Smartphone,
+  Monitor,
+  User
+} from 'lucide-react';
+import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
+
+
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -1513,47 +1556,7 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
         >
           Limpiar Filtros
         </buttonimport React, { useState, useEffect } from 'react';
-import { 
-  FileText, 
-  Users, 
-  Settings, 
-  BarChart3, 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  Save,
-  LogOut,
-  Building2,
-  Calculator,
-  Search,
-  Eye,
-  Filter,
-  FileSpreadsheet,
-  CheckCircle,
-  AlertCircle,
-  Info,
-  X,
-  Send,
-  MessageCircle,
-  RefreshCw,
-  Mail,
-  TrendingUp,
-  Calendar,
-  DollarSign,
-  Clock,
-  Download,
-  Upload,
-  Palette,
-  Shield,
-  FileBarChart,
-  Bell,
-  Moon,
-  Sun,
-  Smartphone,
-  Monitor,
-  User
-} from 'lucide-react';
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
+
 
 // Simulación de Firebase Auth (en producción usar Firebase Auth)
 const mockFirebaseAuth = {
