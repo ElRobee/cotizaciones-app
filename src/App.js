@@ -41,9 +41,6 @@ import {
 } from 'lucide-react';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 
-
-                           </div>
-              
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
                 <input
