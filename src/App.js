@@ -39,786 +39,91 @@ import {
   Monitor,
   User
 } from 'lucide-react';
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts';
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Dirección</label>
-                <input
-                  type="text"
-                  value={data.company.direccion}
-                  onChange={(e) => setData(prev => ({
-                    ...prev,
-                    company: { ...prev.company, direccion: e.target.value }
-                  }))}
-                  onKeyDown={(e) => e.stopPropagation()}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Ciudad</label>
-                <input
-                  type="text"
-                  value={data.company.ciudad}
-                  onChange={(e) => setData(prev => ({
-                    ...prev,
-                    company: { ...prev.company, ciudad: e.target.value }
-                  }))}
-                  onKeyDown={(e) => e.stopPropagation()}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Región</label>
-                <input
-                  type="text"
-                  value={data.company.region}
-                  onChange={(e) => setData(prev => ({
-                    ...prev,
-                    company: { ...prev.company, region: e.target.value }
-                  }))}
-                  onKeyDown={(e) => e.stopPropagation()}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Teléfono</label>
-                <input
-                  type="text"
-                  value={data.company.telefono}
-                  onChange={(e) => setData(prev => ({
-                    ...prev,
-                    company: { ...prev.company, telefono: e.target.value }
-                  }))}
-                  onKeyDown={(e) => e.stopPropagation()}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                <input
-                  type="email"
-                  value={data.company.email}
-                  onChange={(e) => setData(prev => ({
-                    ...prev,
-                    company: { ...prev.company, email: e.target.value }
-                  }))}
-                  onKeyDown={(e) => e.stopPropagation()}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Logo de la Empresa</label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
-                  <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">Arrastra tu logo aquí o haz clic para seleccionar</p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                  />
-                </div>
-              </div>
-              
-              <div className="md:col-span-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    showNotification('Configuración guardada exitosamente', 'success');
-                  }}
-                  className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Save className="w-4 h-4" />
-                  <span>Guardar Configuración</span>
-                </button>
-              </div>
-            </form>
+<div className="p-3 bg-purple-100 rounded-full">
+              <DollarSign className="w-6 h-6 text-purple-600" />
+            </div>
           </div>
         </div>
 
-        {/* Panel de personalización */}
-        <div className="space-y-6">
-          {/* Personalización de tema */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Personalización</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Tema de Color</label>
-                <div className="grid grid-cols-5 gap-2">
-                  {Object.entries(themes).map(([themeName, themeColors]) => (
-                    <button
-                      key={themeName}
-                      onClick={() => setTheme(themeName)}
-                      className={`w-10 h-10 rounded-lg border-2 transition-all ${
-                        theme === themeName ? 'border-gray-400 scale-110' : 'border-gray-200'
-                      }`}
-                      style={{ backgroundColor: `var(--${themeColors.primary})` }}
-                      title={`Tema ${themeName}`}
-                    >
-                      {theme === themeName && (
-                        <div className="w-full h-full rounded-md bg-white bg-opacity-30 flex items-center justify-center">
-                          <CheckCircle className="w-5 h-5 text-white" />
-                        </div>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Modo Oscuro</label>
-                  <p className="text-xs text-gray-500">Cambia la apariencia de la aplicación</p>
-                </div>
-                <button
-                  onClick={() => setDarkMode(!darkMode)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    darkMode ? 'bg-blue-600' : 'bg-gray-200'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      darkMode ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Vista Compacta</label>
-                  <p className="text-xs text-gray-500">Reduce el tamaño del sidebar</p>
-                </div>
-                <button
-                  onClick={() => setCompactView(!compactView)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    compactView ? 'bg-blue-600' : 'bg-gray-200'
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      compactView ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                  />
-                </button>
-              </div>
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Tasa Conversión</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">
+                {data.quotations.length > 0 
+                  ? Math.round((data.quotations.filter(q => q.status === 'Facturada').length / data.quotations.length) * 100)
+                  : 0}%
+              </p>
+              <p className="text-sm text-orange-600 mt-2">↗ +2% vs mes anterior</p>
+            </div>
+            <div className="p-3 bg-orange-100 rounded-full">
+              <TrendingUp className="w-6 h-6 text-orange-600" />
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* Gestión de usuarios (solo para admin) */}
-          {currentUser?.role === 'admin' && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">Usuarios del Sistema</h3>
-              
-              <div className="space-y-3">
-                {data.users.map(user => (
-                  <div key={user.id} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900 text-sm">{user.name}</p>
-                        <p className="text-gray-500 text-xs">{user.email}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
+      {/* Lista de cotizaciones recientes */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+        <div className="p-6 border-b border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-800">Cotizaciones Recientes</h3>
+        </div>
+        <div className="overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Número</th>
+                  <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Cliente</th>
+                  <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Fecha</th>
+                  <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Total</th>
+                  <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Estado</th>
+                  <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Prioridad</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.quotations.slice(-5).reverse().map(quote => (
+                  <tr key={quote.id} className="hover:bg-gray-50 transition-colors">
+                    <td className="py-4 px-6 font-medium text-gray-900">{quote.number}</td>
+                    <td className="py-4 px-6 text-gray-700">{quote.client}</td>
+                    <td className="py-4 px-6 text-gray-600">{quote.date}</td>
+                    <td className="py-4 px-6 font-semibold text-gray-900">${quote.total.toLocaleString()}</td>
+                    <td className="py-4 px-6">
                       <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                        user.role === 'admin' 
-                          ? 'bg-red-100 text-red-800'
-                          : user.role === 'seller'
+                        quote.status === 'Facturada' 
+                          ? 'bg-green-100 text-green-800' 
+                          : quote.status === 'Pendiente'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : quote.status === 'En Proceso'
                           ? 'bg-blue-100 text-blue-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {quote.status}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                        quote.priority === 'Alta' 
+                          ? 'bg-red-100 text-red-800' 
+                          : quote.priority === 'Media'
+                          ? 'bg-yellow-100 text-yellow-800'
                           : 'bg-green-100 text-green-800'
                       }`}>
-                        {user.role === 'admin' ? 'Administrador' : 
-                         user.role === 'seller' ? 'Vendedor' : 'Usuario'}
+                        {quote.priority}
                       </span>
-                    </div>
-                  </div>
+                    </td>
+                  </tr>
                 ))}
-              </div>
-            </div>
-          )}
-
-          {/* Acciones del sistema */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Acciones del Sistema</h3>
-            
-            <div className="space-y-3">
-              <button
-                onClick={generateBackup}
-                className="w-full flex items-center space-x-3 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <Download className="w-5 h-5 text-blue-600" />
-                <div className="text-left">
-                  <p className="text-sm font-medium text-gray-900">Crear Backup</p>
-                  <p className="text-xs text-gray-500">Descargar copia de seguridad</p>
-                </div>
-              </button>
-              
-              <button
-                onClick={() => {
-                  if (window.confirm('¿Estás seguro de que quieres reiniciar la aplicación? Se perderán los datos no guardados.')) {
-                    window.location.reload();
-                  }
-                }}
-                className="w-full flex items-center space-x-3 px-4 py-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <RefreshCw className="w-5 h-5 text-orange-600" />
-                <div className="text-left">
-                  <p className="text-sm font-medium text-gray-900">Reiniciar Sistema</p>
-                  <p className="text-xs text-gray-500">Recargar la aplicación</p>
-                </div>
-              </button>
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   );
 
-  // Modales para clientes y servicios (simplificados para espacio)
-  const ClientModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
-              {editingClient ? 'Editar Cliente' : 'Nuevo Cliente'}
-            </h2>
-            <button onClick={cancelEdit} className="text-gray-400 hover:text-gray-600">
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-          
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">RUT *</label>
-              <input
-                type="text"
-                value={editingClient ? editingClient.rut : newClient.rut}
-                onChange={(e) => {
-                  const formattedRut = formatRut(e.target.value);
-                  if (editingClient) {
-                    setEditingClient(prev => ({ ...prev, rut: formattedRut }));
-                  } else {
-                    setNewClient(prev => ({ ...prev, rut: formattedRut }));
-                  }
-                }}
-                onKeyDown={(e) => e.stopPropagation()}
-                placeholder="12.345.678-9"
-                maxLength="12"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Encargado</label>
-              <input
-                type="text"
-                value={editingClient ? editingClient.encargado : newClient.encargado}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (editingClient) {
-                    setEditingClient(prev => ({ ...prev, encargado: value }));
-                  } else {
-                    setNewClient(prev => ({ ...prev, encargado: value }));
-                  }
-                }}
-                onKeyDown={(e) => e.stopPropagation()}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Empresa *</label>
-              <input
-                type="text"
-                value={editingClient ? editingClient.empresa : newClient.empresa}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (editingClient) {
-                    setEditingClient(prev => ({ ...prev, empresa: value }));
-                  } else {
-                    setNewClient(prev => ({ ...prev, empresa: value }));
-                  }
-                }}
-                onKeyDown={(e) => e.stopPropagation()}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            
-            {/* Resto de campos similares... */}
-          </form>
-          
-          <div className="flex justify-end space-x-4 mt-6">
-            <button
-              onClick={cancelEdit}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={saveClient}
-              className="flex items-center space-x-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Save className="w-4 h-4" />
-              <span>{editingClient ? 'Actualizar' : 'Guardar'}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const ServiceModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
-              {editingService ? 'Editar Servicio' : 'Nuevo Servicio'}
-            </h2>
-            <button onClick={cancelEdit} className="text-gray-400 hover:text-gray-600">
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-          
-          <form className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nombre del Servicio *</label>
-              <input
-                type="text"
-                value={editingService ? editingService.name : newService.name}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (editingService) {
-                    setEditingService(prev => ({ ...prev, name: value }));
-                  } else {
-                    setNewService(prev => ({ ...prev, name: value }));
-                  }
-                }}
-                onKeyDown={(e) => e.stopPropagation()}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Ej: GRUA HORQUILLA 5 TON"
-                required
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
-              <select
-                value={editingService ? editingService.category : newService.category}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (editingService) {
-                    setEditingService(prev => ({ ...prev, category: value }));
-                  } else {
-                    setNewService(prev => ({ ...prev, category: value }));
-                  }
-                }}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="General">General</option>
-                <option value="Elevadores">Elevadores</option>
-                <option value="Transporte">Transporte</option>
-                <option value="Personal">Personal</option>
-                <option value="Combustible">Combustible</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Precio ($) *</label>
-              <input
-                type="number"
-                value={editingService ? editingService.price : newService.price}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (editingService) {
-                    setEditingService(prev => ({ ...prev, price: value }));
-                  } else {
-                    setNewService(prev => ({ ...prev, price: value }));
-                  }
-                }}
-                onKeyDown={(e) => e.stopPropagation()}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="0"
-                min="0"
-                required
-              />
-            </div>
-
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                checked={editingService ? editingService.active : newService.active}
-                onChange={(e) => {
-                  const value = e.target.checked;
-                  if (editingService) {
-                    setEditingService(prev => ({ ...prev, active: value }));
-                  } else {
-                    setNewService(prev => ({ ...prev, active: value }));
-                  }
-                }}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label className="ml-2 text-sm text-gray-700">Servicio activo</label>
-            </div>
-          </form>
-          
-          <div className="flex justify-end space-x-4 mt-6">
-            <button
-              onClick={cancelEdit}
-              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={saveService}
-              className="flex items-center space-x-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              <Save className="w-4 h-4" />
-              <span>{editingService ? 'Actualizar' : 'Guardar'}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Renderizado condicional principal
-  if (!currentUser) {
-    return (
-      <>
-        <AuthView />
-        <NotificationContainer />
-      </>
-    );
-  }
-
-  return (
-    <div className={`flex h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-100'} transition-colors duration-300`}>
-      <Sidebar />
-      
-      <div className="flex-1 overflow-auto">
-        {currentView === 'dashboard' && <DashboardView />}
-        {currentView === 'quotations' && <QuotationsView />}
-        {currentView === 'clients' && (
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-800">Clientes</h1>
-                <p className="text-gray-600 mt-1">{getFilteredClients().length} clientes registrados</p>
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => exportToExcel('clients')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                  <span>Excel</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setModalType('client');
-                    setShowModal(true);
-                  }}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Nuevo Cliente</span>
-                </button>
-              </div>
-            </div>
-            
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
-              <div className="relative max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Buscar clientes..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyDown={(e) => e.stopPropagation()}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">RUT</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Empresa</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Encargado</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Ciudad</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Cotizaciones</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {getFilteredClients().map(client => {
-                      const clientQuotations = data.quotations.filter(q => q.client === client.empresa);
-                      return (
-                        <tr key={client.id} className="hover:bg-gray-50 transition-colors border-b border-gray-100">
-                          <td className="py-4 px-6 font-semibold text-green-600">${service.price.toLocaleString()}</td>
-                          <td className="py-4 px-6">
-                            <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                              service.active 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
-                            }`}>
-                              {service.active ? 'Activo' : 'Inactivo'}
-                            </span>
-                          </td>
-                          <td className="py-4 px-6 text-gray-600">{serviceUsage}x usado</td>
-                          <td className="py-4 px-6">
-                            <div className="flex space-x-1">
-                              <button 
-                                onClick={() => startEdit('service', service)}
-                                className="p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 rounded-lg transition-colors"
-                                title="Editar"
-                              >
-                                <Edit2 className="w-4 h-4" />
-                              </button>
-                              <button 
-                                onClick={() => deleteItem('services', service.id)}
-                                className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
-                                title="Eliminar"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-        {currentView === 'reports' && <ReportsView />}
-        {currentView === 'settings' && <SettingsView />}
-      </div>
-      
-      {/* Componentes flotantes */}
-      <NotificationContainer />
-      <SystemNotificationPanel />
-      
-      {/* Modales */}
-      {showModal && modalType === 'quotation' && <QuotationModal />}
-      {showModal && modalType === 'client' && <ClientModal />}
-      {showModal && modalType === 'service' && <ServiceModal />}
-      
-      {/* Estilos CSS adicionales */}
-      <style jsx>{`
-        @keyframes slide-in {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        
-        .animate-slide-in {
-          animation: slide-in 0.3s ease-out;
-        }
-        
-        /* Personalización de scrollbar */
-        ::-webkit-scrollbar {
-          width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: #c1c1c1;
-          border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: #a8a8a8;
-        }
-        
-        /* Efectos de hover mejorados */
-        .hover-scale:hover {
-          transform: scale(1.02);
-          transition: transform 0.2s ease-in-out;
-        }
-        
-        /* Animaciones de carga */
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        
-        .animate-spin {
-          animation: spin 1s linear infinite;
-        }
-        
-        /* Variables de color CSS para temas */
-        :root {
-          --blue-600: #2563eb;
-          --blue-100: #dbeafe;
-          --blue-400: #60a5fa;
-          --green-600: #16a34a;
-          --green-100: #dcfce7;
-          --green-400: #4ade80;
-          --purple-600: #9333ea;
-          --purple-100: #f3e8ff;
-          --purple-400: #c084fc;
-          --red-600: #dc2626;
-          --red-100: #fee2e2;
-          --red-400: #f87171;
-          --gray-600: #4b5563;
-          --gray-100: #f3f4f6;
-          --gray-400: #9ca3af;
-        }
-      `}</style>
-    </div>
-  );
-};
-
-export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td>
-                          <td className="py-4 px-6 font-medium text-gray-900">{client.empresa}</td>
-                          <td className="py-4 px-6 text-gray-700">{client.encargado}</td>
-                          <td className="py-4 px-6 text-gray-600">{client.ciudad}</td>
-                          <td className="py-4 px-6">
-                            <span className="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                              {clientQuotations.length} cotizaciones
-                            </span>
-                          </td>
-                          <td className="py-4 px-6">
-                            <div className="flex space-x-1">
-                              <button 
-                                onClick={() => startEdit('client', client)}
-                                className="p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 rounded-lg transition-colors"
-                                title="Editar"
-                              >
-                                <Edit2 className="w-4 h-4" />
-                              </button>
-                              <button 
-                                onClick={() => deleteItem('clients', client.id)}
-                                className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
-                                title="Eliminar"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-        {currentView === 'services' && (
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-800">Servicios</h1>
-                <p className="text-gray-600 mt-1">{getFilteredServices().length} servicios disponibles</p>
-              </div>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => exportToExcel('services')}
-                  className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-                >
-                  <FileSpreadsheet className="w-4 h-4" />
-                  <span>Excel</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setModalType('service');
-                    setShowModal(true);
-                  }}
-                  className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Nuevo Servicio</span>
-                </button>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Servicio</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Categoría</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Precio</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Estado</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Uso</th>
-                      <th className="text-left py-4 px-6 text-sm font-medium text-gray-600">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {getFilteredServices().map(service => {
-                      const serviceUsage = data.quotations.reduce((count, q) => 
-                        count + q.items.filter(item => item.service === service.name).length, 0
-                      );
-                      
-                      return (
-                        <tr key={service.id} className="hover:bg-gray-50 transition-colors border-b border-gray-100">
-                          <td className="py-4 px-6 font-medium text-gray-900">{service.name}</td>
-                          <td className="py-4 px-6 text-gray-600">{service.category}</td>
-                          <td className="py-4 px-6   // Vista de configuración con temas y personalización
-  const SettingsView = () => (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Configuración</h1>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Configuración de la empresa */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">Información de la Empresa</h2>
-            
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Razón Social</label>
-                <input
-                  type="text"
-                  value={data.company.razonSocial}
-                  onChange={(e) => setData(prev => ({
-                    ...prev,
-                    company: { ...prev.company, razonSocial: e.target.value }
-                  }))}
-                  onKeyDown={(e) => e.stopPropagation()}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">RUT</label>
-                <input
-                  type="text"
-                  value={data.company.rut}
-                  onChange={(e) => setData(prev => ({
-                    ...prev,
-                    company: { ...prev.company, rut: e.target.value }
-                  }))}
-                  onKeyDown={(e) => e.stopPropagation  // Vista de cotizaciones mejorada
+  // Vista de cotizaciones mejorada
   const QuotationsView = () => (
     <div className="p-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
@@ -857,7 +162,6 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
               placeholder="Buscar por cliente, número o estado..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyDown={(e) => e.stopPropagation()}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -878,7 +182,76 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
         </div>
       </div>
       
-      <AdvancedFilters />
+      {/* Filtros avanzados */}
+      <div className={`bg-white border rounded-lg shadow-lg p-4 mb-4 transition-all ${showFilters ? 'block' : 'hidden'}`}>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Fecha Desde</label>
+            <input
+              type="date"
+              value={filters.dateFrom}
+              onChange={(e) => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Fecha Hasta</label>
+            <input
+              type="date"
+              value={filters.dateTo}
+              onChange={(e) => setFilters(prev => ({ ...prev, dateTo: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
+            <select
+              value={filters.status}
+              onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Todos los estados</option>
+              <option value="Pendiente">Pendiente</option>
+              <option value="En Proceso">En Proceso</option>
+              <option value="Facturada">Facturada</option>
+              <option value="Rechazada">Rechazada</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Prioridad</label>
+            <select
+              value={filters.priority}
+              onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Todas las prioridades</option>
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
+            </select>
+          </div>
+        </div>
+        
+        <div className="flex justify-end space-x-2 mt-4">
+          <button
+            onClick={() => setFilters({
+              dateFrom: '', dateTo: '', status: '', priority: '', minAmount: '', maxAmount: '', client: '', createdBy: ''
+            })}
+            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Limpiar Filtros
+          </button>
+          <button
+            onClick={() => setShowFilters(false)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Aplicar Filtros
+          </button>
+        </div>
+      </div>
       
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
@@ -906,75 +279,344 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
                       {quote.validUntil}
                     </span>
                   </td>
-                  <td className="py-4 px-6 font-semibold text-gray-900">${quote.total.toLoc  // Función para agregar item a cotización
-  const addQuotationItem = () => {
-    const currentItems = editingQuotation ? editingQuotation.items : newQuotation.items;
-    const newItem = { quantity: 1, service: '', unitPrice: 0, total: 0 };
-    
-    if (editingQuotation) {
-      setEditingQuotation(prev => ({ ...prev, items: [...currentItems, newItem] }));
-    } else {
-      setNewQuotation(prev => ({ ...prev, items: [...currentItems, newItem] }));
-    }
-  };
+                  <td className="py-4 px-6 font-semibold text-gray-900">${quote.total.toLocaleString()}</td>
+                  <td className="py-4 px-6">
+                    <select
+                      value={quote.status}
+                      onChange={(e) => changeQuotationStatus(quote.id, e.target.value)}
+                      className={`text-xs font-medium rounded-full px-3 py-1 border-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                        quote.status === 'Facturada' 
+                          ? 'bg-green-100 text-green-800' 
+                          : quote.status === 'Pendiente'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : quote.status === 'En Proceso'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-red-100 text-red-800'
+                      }`}
+                    >
+                      <option value="Pendiente">Pendiente</option>
+                      <option value="En Proceso">En Proceso</option>
+                      <option value="Facturada">Facturada</option>
+                      <option value="Rechazada">Rechazada</option>
+                    </select>
+                  </td>
+                  <td className="py-4 px-6">
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      quote.priority === 'Alta' 
+                        ? 'bg-red-100 text-red-800' 
+                        : quote.priority === 'Media'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-green-100 text-green-800'
+                    }`}>
+                      {quote.priority}
+                    </span>
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="flex space-x-1">
+                      <button 
+                        onClick={() => exportToPDF(quote)}
+                        className="p-2 text-purple-600 hover:text-purple-800 hover:bg-purple-100 rounded-lg transition-colors"
+                        title="Exportar PDF"
+                      >
+                        <FileText className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => sendViaWhatsApp(quote)}
+                        className="p-2 text-green-600 hover:text-green-800 hover:bg-green-100 rounded-lg transition-colors"
+                        title="Enviar por WhatsApp"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => sendViaEmail(quote)}
+                        className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg transition-colors"
+                        title="Enviar por Email"
+                      >
+                        <Mail className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => startEdit('quotation', quote)}
+                        className="p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 rounded-lg transition-colors"
+                        title="Editar"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => deleteItem('quotations', quote.id)}
+                        className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
+                        title="Eliminar"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          
+          {getFilteredQuotations().length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              <FileText className="w-16 h-16 mx-auto mb-4 opacity-30" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No hay cotizaciones</h3>
+              <p>No se encontraron cotizaciones que coincidan con tu búsqueda.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 
-  // Función para actualizar item de cotización
-  const updateQuotationItem = (index, field, value) => {
+  // Modal para cotización simplificado
+  const QuotationModal = () => {
     const isEditing = editingQuotation !== null;
-    const items = isEditing ? [...editingQuotation.items] : [...newQuotation.items];
+    const quotationData = isEditing ? editingQuotation : newQuotation;
+    const totals = calculateQuotationTotals(quotationData.items, quotationData.discount);
     
-    items[index][field] = value;
-    
-    if (field === 'service') {
-      const service = data.services.find(s => s.name === value);
-      items[index].unitPrice = service ? service.price : 0;
-    }
-    
-    items[index].total = items[index].quantity * items[index].unitPrice;
-    
-    if (isEditing) {
-      setEditingQuotation(prev => ({ ...prev, items }));
-    } else {
-      setNewQuotation(prev => ({ ...prev, items }));
-    }
-  };
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+          <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-xl">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-800">
+                {isEditing ? 'Editar Cotización' : 'Nueva Cotización'}
+              </h2>
+              <button
+                onClick={cancelEdit}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
 
-  // Función para exportar a PDF
-  const exportToPDF = (quotation) => {
-    const totals = calculateQuotationTotals(quotation.items, quotation.discount);
-    const client = data.clients.find(c => c.empresa === quotation.client);
-    
-    const htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-        <div style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px;">
-          <h1 style="color: #333; margin: 0;">${data.company.razonSocial}</h1>
-          <p style="margin: 5px 0;">${data.company.direccion} - ${data.company.ciudad}, ${data.company.region}</p>
-          <p style="margin: 5px 0;">RUT: ${data.company.rut} | Tel: ${data.company.telefono}</p>
-          <p style="margin: 5px 0;">Email: ${data.company.email}</p>
-        </div>
-        
-        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-          <div>
-            <h2 style="color: #333;">COTIZACIÓN</h2>
-            <p><strong>Número:</strong> ${quotation.number}</p>
-            <p><strong>Fecha:</strong> ${quotation.date}</p>
-            <p><strong>Válida hasta:</strong> ${quotation.validUntil}</p>
-            <p><strong>Estado:</strong> ${quotation.status}</p>
-            <p><strong>Prioridad:</strong> ${quotation.priority}</p>
-          </div>
-          <div style="text-align: right;">
-            <h3 style="color: #333;">CLIENTE</h3>
-            <p><strong>${client?.empresa || quotation.client}</strong></p>
-            <p>RUT: ${client?.rut || ''}</p>
-            <p>Contacto: ${client?.encargado || ''}</p>
-            <p>${client?.direccion || ''}</p>
-            <p>${client?.ciudad || ''}, ${client?.region || ''}</p>
-            <p>Tel: ${client?.telefono || ''}</p>
-            <p>Email: ${client?.email || ''}</p>
-          </div>
-        </div>
-        
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+          <div className="p-6 space-y-6">
+            {/* Información básica */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Cliente *</label>
+                <select
+                  value={quotationData.client}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (isEditing) {
+                      setEditingQuotation(prev => ({ ...prev, client: value }));
+                    } else {
+                      setNewQuotation(prev => ({ ...prev, client: value }));
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  required
+                >
+                  <option value="">Seleccionar cliente</option>
+                  {data.clients.map(client => (
+                    <option key={client.id} value={client.empresa}>
+                      {client.empresa} - {client.encargado}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Fecha</label>
+                <input
+                  type="date"
+                  value={quotationData.date}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (isEditing) {
+                      setEditingQuotation(prev => ({ ...prev, date: value }));
+                    } else {
+                      setNewQuotation(prev => ({ ...prev, date: value }));
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Válida Hasta</label>
+                <input
+                  type="date"
+                  value={quotationData.validUntil}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (isEditing) {
+                      setEditingQuotation(prev => ({ ...prev, validUntil: value }));
+                    } else {
+                      setNewQuotation(prev => ({ ...prev, validUntil: value }));
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Prioridad</label>
+                <select
+                  value={quotationData.priority}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (isEditing) {
+                      setEditingQuotation(prev => ({ ...prev, priority: value }));
+                    } else {
+                      setNewQuotation(prev => ({ ...prev, priority: value }));
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="Baja">Baja</option>
+                  <option value="Media">Media</option>
+                  <option value="Alta">Alta</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Descuento (%)</label>
+                <select
+                  value={quotationData.discount}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    if (isEditing) {
+                      setEditingQuotation(prev => ({ ...prev, discount: value }));
+                    } else {
+                      setNewQuotation(prev => ({ ...prev, discount: value }));
+                    }
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value={0}>0%</option>
+                  <option value={3}>3%</option>
+                  <option value={5}>5%</option>
+                  <option value={8}>8%</option>
+                  <option value={10}>10%</option>
+                  <option value={15}>15%</option>
+                  <option value={20}>20%</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Notas</label>
+              <textarea
+                value={quotationData.notes}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (isEditing) {
+                    setEditingQuotation(prev => ({ ...prev, notes: value }));
+                  } else {
+                    setNewQuotation(prev => ({ ...prev, notes: value }));
+                  }
+                }}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Notas adicionales para la cotización..."
+              />
+            </div>
+
+            {/* Detalle de servicios */}
+            <div>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Servicios</h3>
+                <button
+                  onClick={addQuotationItem}
+                  className="flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>Agregar</span>
+                </button>
+              </div>
+              
+              <div className="bg-gray-50 rounded-lg overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-100">
+                      <tr>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Cantidad</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Servicio</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Precio Unit.</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Total</th>
+                        <th className="text-left py-3 px-4 text-sm font-medium text-gray-600">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {quotationData.items.map((item, index) => (
+                        <tr key={index} className="border-t border-gray-200">
+                          <td className="py-3 px-4">
+                            <input
+                              type="number"
+                              value={item.quantity}
+                              onChange={(e) => updateQuotationItem(index, 'quantity', Number(e.target.value))}
+                              className="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              min="1"
+                            />
+                          </td>
+                          <td className="py-3 px-4">
+                            <select
+                              value={item.service}
+                              onChange={(e) => updateQuotationItem(index, 'service', e.target.value)}
+                              className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            >
+                              <option value="">Seleccionar servicio</option>
+                              {data.services.filter(s => s.active).map(service => (
+                                <option key={service.id} value={service.name}>
+                                  {service.name}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                          <td className="py-3 px-4 text-gray-700">
+                            ${item.unitPrice.toLocaleString()}
+                          </td>
+                          <td className="py-3 px-4 font-semibold text-gray-900">
+                            ${item.total.toLocaleString()}
+                          </td>
+                          <td className="py-3 px-4">
+                            <button
+                              onClick={() => {
+                                const updatedItems = quotationData.items.filter((_, i) => i !== index);
+                                if (isEditing) {
+                                  setEditingQuotation(prev => ({ ...prev, items: updatedItems }));
+                                } else {
+                                  setNewQuotation(prev => ({ ...prev, items: updatedItems }));
+                                }
+                              }}
+                              className="p-1 text-red-600 hover:text-red-800 hover:bg-red-100 rounded transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {/* Resumen financiero */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Resumen Financiero</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Subtotal:</span>
+                    <span className="font-semibold">${totals.subtotal.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">IVA (19%):</span>
+                    <span className="font-semibold">${totals.iva.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Total Bruto:</span>
+                    <span className="font-semibold">${totals.totalBruto.toLocaleString()}</span>
+                  </div>
+                  {totals.discountAmount > 0 && (
+                    <div className="flex justify-between text-red-600">
+                      <span>Descuento ({quotationData.discount}%):</span>
+                      <span className="font-semibold">-${totals.discountAmount.to        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
           <thead>
             <tr style="background-color: #f5f5f5;">
               <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">Cantidad</th>
@@ -1136,7 +778,7 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
 
   // Función auxiliar para descargar CSV
   const downloadCSV = (content, filename) => {
-    const BOM = '\uFEFF'; // UTF-8 BOM para Excel
+    const BOM = '\uFEFF';
     const blob = new Blob([BOM + content], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -1146,7 +788,7 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     window.URL.revokeObjectURL(url);
   };
 
-  // Función para filtrar cotizaciones con filtros avanzados
+  // Funciones para filtrar datos
   const getFilteredQuotations = () => {
     return data.quotations.filter(quotation => {
       const matchesSearch = quotation.client.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -1166,7 +808,6 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     });
   };
 
-  // Función para filtrar clientes
   const getFilteredClients = () => {
     return data.clients.filter(client => 
       client.empresa.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -1177,7 +818,6 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     ).sort((a, b) => a.empresa.localeCompare(b.empresa));
   };
 
-  // Función para filtrar servicios
   const getFilteredServices = () => {
     return data.services.filter(service => 
       service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -1185,7 +825,7 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     ).sort((a, b) => a.name.localeCompare(b.name));
   };
 
-  // Función para guardar cotización
+  // Funciones para guardar datos
   const saveQuotation = () => {
     const quotationData = editingQuotation || newQuotation;
     const totals = calculateQuotationTotals(quotationData.items, quotationData.discount);
@@ -1239,7 +879,6 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     setShowModal(false);
   };
 
-  // Función para guardar cliente
   const saveClient = () => {
     if (!validateRut(editingClient ? editingClient.rut : newClient.rut)) {
       showNotification('RUT inválido. Verifique el formato y dígito verificador.', 'error');
@@ -1278,7 +917,6 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     setShowModal(false);
   };
 
-  // Función para guardar servicio
   const saveService = () => {
     if (editingService) {
       setData(prev => ({
@@ -1310,7 +948,7 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     setShowModal(false);
   };
 
-  // Función para eliminar elemento
+  // Funciones auxiliares
   const deleteItem = (type, id) => {
     const itemName = type === 'quotations' ? 'cotización' : type === 'clients' ? 'cliente' : 'servicio';
     if (window.confirm(`¿Estás seguro de eliminar este ${itemName}?`)) {
@@ -1322,7 +960,6 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     }
   };
 
-  // Función para iniciar edición
   const startEdit = (type, item) => {
     if (type === 'quotation') {
       setEditingQuotation({ ...item });
@@ -1337,19 +974,11 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     setShowModal(true);
   };
 
-  // Función para cancelar edición
   const cancelEdit = () => {
     setEditingQuotation(null);
     setEditingClient(null);
     setEditingService(null);
     setShowModal(false);
-  };
-
-  // Marcar notificación como leída
-  const markNotificationAsRead = (notificationId) => {
-    setSystemNotifications(prev => 
-      prev.map(n => n.id === notificationId ? { ...n, read: true } : n)
-    );
   };
 
   // Componente de notificaciones del sistema
@@ -1358,7 +987,7 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
       {notifications.map(notification => (
         <div
           key={notification.id}
-          className={`flex items-center space-x-3 px-4 py-3 rounded-lg shadow-lg transition-all transform animate-slide-in ${
+          className={`flex items-center space-x-3 px-4 py-3 rounded-lg shadow-lg transition-all transform ${
             notification.type === 'success' 
               ? 'bg-green-500 text-white' 
               : notification.type === 'error'
@@ -1384,180 +1013,275 @@ export default CotizacionesApp;font-mono text-sm text-gray-900">{client.rut}</td
     </div>
   );
 
-  // Panel de notificaciones del sistema
-  const SystemNotificationPanel = () => (
-    <div className={`fixed top-16 right-4 w-96 bg-white rounded-lg shadow-xl border z-40 transform transition-all ${
-      showNotificationPanel ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none'
-    }`}>
-      <div className="p-4 border-b bg-gray-50 rounded-t-lg">
-        <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-gray-800">Notificaciones</h3>
-          <button
-            onClick={() => setShowNotificationPanel(false)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <X className="w-5 h-5" />
-          </button>
+  // Componente del sidebar
+  const Sidebar = () => (
+    <div className={`w-64 bg-gray-900 text-white h-screen flex flex-col transition-all duration-300`}>
+      <div className="p-4 border-b border-gray-700">
+        <div className="flex items-center space-x-2">
+          <Building2 className="w-8 h-8 text-blue-400" />
+          <div className="overflow-hidden">
+            <h2 className="font-bold text-sm truncate">{data.company.razonSocial}</h2>
+            <p className="text-xs text-gray-400 truncate">{currentUser?.displayName || currentUser?.email}</p>
+          </div>
         </div>
       </div>
-      <div className="max-h-96 overflow-y-auto">
-        {systemNotifications.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            <Bell className="w-12 h-12 mx-auto mb-2 opacity-50" />
-            <p>No hay notificaciones</p>
-          </div>
-        ) : (
-          systemNotifications.map(notification => (
-            <div
-              key={notification.id}
-              className={`p-4 border-b hover:bg-gray-50 cursor-pointer ${
-                !notification.read ? 'bg-blue-50 border-l-4 border-blue-500' : ''
+      
+      <nav className="flex-1 p-2">
+        <div className="space-y-1">
+          {[
+            { id: 'dashboard', icon: BarChart3, label: 'Dashboard' },
+            { id: 'quotations', icon: FileText, label: 'Cotizaciones' },
+            { id: 'clients', icon: Users, label: 'Clientes' },
+            { id: 'services', icon: Calculator, label: 'Servicios' },
+            { id: 'settings', icon: Settings, label: 'Configuración' }
+          ].map(item => (
+            <button
+              key={item.id}
+              onClick={() => setCurrentView(item.id)}
+              className={`w-full flex items-center space-x-3 px-3 py-3 rounded-lg transition-colors ${
+                currentView === item.id 
+                  ? 'bg-blue-600 text-white shadow-lg' 
+                  : 'text-gray-300 hover:bg-gray-800 hover:text-white'
               }`}
-              onClick={() => markNotificationAsRead(notification.id)}
             >
-              <div className="flex items-start space-x-3">
-                <div className={`p-1 rounded-full ${
-                  notification.priority === 'high' ? 'bg-red-100 text-red-600' :
-                  notification.priority === 'medium' ? 'bg-yellow-100 text-yellow-600' :
-                  'bg-blue-100 text-blue-600'
-                }`}>
-                  {notification.type === 'reminder' ? <Clock className="w-4 h-4" /> : <Bell className="w-4 h-4" />}
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-gray-800 text-sm">{notification.title}</p>
-                  <p className="text-gray-600 text-xs mt-1">{notification.message}</p>
-                  <p className="text-gray-400 text-xs mt-2">
-                    {new Date(notification.date).toLocaleDateString()}
-                  </p>
-                </div>
-                {!notification.read && (
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                )}
-              </div>
-            </div>
-          ))
-        )}
+              <item.icon className="w-5 h-5 flex-shrink-0" />
+              <span className="text-sm">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
+      
+      <div className="p-2 border-t border-gray-700 space-y-1">
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-gray-800"
+        >
+          <LogOut className="w-5 h-5" />
+          <span className="text-sm">Cerrar Sesión</span>
+        </button>
       </div>
     </div>
   );
 
-  // Componente de filtros avanzados
-  const AdvancedFilters = () => (
-    <div className={`bg-white border rounded-lg shadow-lg p-4 mb-4 transition-all ${showFilters ? 'block' : 'hidden'}`}>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Fecha Desde</label>
-          <input
-            type="date"
-            value={filters.dateFrom}
-            onChange={(e) => setFilters(prev => ({ ...prev, dateFrom: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+  // Componente de autenticación mejorado
+  const AuthView = () => (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
+        <div className="text-center mb-8">
+          <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <Building2 className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            {authMode === 'login' ? 'Iniciar Sesión' : 
+             authMode === 'register' ? 'Crear Cuenta' : 
+             'Recuperar Contraseña'}
+          </h1>
+          <p className="text-gray-600 text-sm">
+            {authMode === 'login' ? 'Accede a tu cuenta para continuar' : 
+             authMode === 'register' ? 'Crea tu cuenta en el sistema' : 
+             'Te enviaremos un enlace de recuperación'}
+          </p>
         </div>
         
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Fecha Hasta</label>
-          <input
-            type="date"
-            value={filters.dateTo}
-            onChange={(e) => setFilters(prev => ({ ...prev, dateTo: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-          <select
-            value={filters.status}
-            onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <form onSubmit={handleAuth} className="space-y-4">
+          {authMode === 'register' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Nombre Completo
+              </label>
+              <input
+                type="text"
+                value={registerForm.name}
+                onChange={(e) => setRegisterForm(prev => ({ ...prev, name: e.target.value }))}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                placeholder="Tu nombre completo"
+                required
+              />
+            </div>
+          )}
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Email
+            </label>
+            <input
+              type="email"
+              value={authMode === 'login' ? loginForm.email : 
+                     authMode === 'register' ? registerForm.email : 
+                     forgotForm.email}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (authMode === 'login') {
+                  setLoginForm(prev => ({ ...prev, email: value }));
+                } else if (authMode === 'register') {
+                  setRegisterForm(prev => ({ ...prev, email: value }));
+                } else {
+                  setForgotForm(prev => ({ ...prev, email: value }));
+                }
+              }}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+              placeholder="tu@email.com"
+              required
+            />
+          </div>
+
+          {authMode !== 'forgot' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                value={authMode === 'login' ? loginForm.password : registerForm.password}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (authMode === 'login') {
+                    setLoginForm(prev => ({ ...prev, password: value }));
+                  } else {
+                    setRegisterForm(prev => ({ ...prev, password: value }));
+                  }
+                }}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                placeholder="Tu contraseña"
+                required
+              />
+            </div>
+          )}
+
+          {authMode === 'register' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Confirmar Contraseña
+              </label>
+              <input
+                type="password"
+                value={registerForm.confirmPassword}
+                onChange={(e) => setRegisterForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                placeholder="Confirma tu contraseña"
+                required
+              />
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-400 text-white py-3 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200 font-medium"
           >
-            <option value="">Todos los estados</option>
-            <option value="Pendiente">Pendiente</option>
-            <option value="Facturada">Facturada</option>
-            <option value="Rechazada">Rechazada</option>
-            <option value="En Proceso">En Proceso</option>
-          </select>
-        </div>
+            {authMode === 'login' ? 'Iniciar Sesión' : 
+             authMode === 'register' ? 'Crear Cuenta' : 
+             'Enviar Enlace'}
+          </button>
+        </form>
         
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Prioridad</label>
-          <select
-            value={filters.priority}
-            onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todas las prioridades</option>
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
-          </select>
+        <div className="mt-6 text-center space-y-2">
+          {authMode === 'login' && (
+            <>
+              <button
+                onClick={() => setAuthMode('forgot')}
+                className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                ¿Olvidaste tu contraseña?
+              </button>
+              <div className="text-sm text-gray-500">
+                ¿No tienes cuenta? 
+                <button
+                  onClick={() => setAuthMode('register')}
+                  className="ml-1 text-blue-600 hover:underline font-medium"
+                >
+                  Regístrate
+                </button>
+              </div>
+            </>
+          )}
+          
+          {authMode !== 'login' && (
+            <button
+              onClick={() => setAuthMode('login')}
+              className="text-sm text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              ← Volver al inicio de sesión
+            </button>
+          )}
         </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Monto Mínimo</label>
-          <input
-            type="number"
-            value={filters.minAmount}
-            onChange={(e) => setFilters(prev => ({ ...prev, minAmount: e.target.value }))}
-            placeholder="0"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Monto Máximo</label>
-          <input
-            type="number"
-            value={filters.maxAmount}
-            onChange={(e) => setFilters(prev => ({ ...prev, maxAmount: e.target.value }))}
-            placeholder="Sin límite"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Cliente</label>
-          <input
-            type="text"
-            value={filters.client}
-            onChange={(e) => setFilters(prev => ({ ...prev, client: e.target.value }))}
-            placeholder="Buscar cliente..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Creado Por</label>
-          <select
-            value={filters.createdBy}
-            onChange={(e) => setFilters(prev => ({ ...prev, createdBy: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todos los usuarios</option>
-            {data.users.map(user => (
-              <option key={user.id} value={user.email}>{user.name}</option>
-            ))}
-          </select>
+
+        <div className="mt-6 pt-4 border-t border-gray-200">
+          <p className="text-xs text-gray-500 text-center mb-2">
+            Cuentas de demo:
+          </p>
+          <div className="text-xs text-gray-600 space-y-1">
+            <div>👨‍💼 Admin: admin@empresa.com / 123456</div>
+            <div>👤 Usuario: usuario@empresa.com / 123456</div>
+            <div>💼 Vendedor: vendedor@empresa.com / 123456</div>
+          </div>
         </div>
       </div>
-      
-      <div className="flex justify-end space-x-2 mt-4">
-        <button
-          onClick={() => setFilters({
-            dateFrom: '', dateTo: '', status: '', priority: '', minAmount: '', maxAmount: '', client: '', createdBy: ''
-          })}
-          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Limpiar Filtros
-        </buttonimport React, { useState, useEffect } from 'react';
+    </div>
+  );
 
+  // Dashboard mejorado
+  const DashboardView = () => (
+    <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+          <p className="text-gray-600 mt-1">Bienvenido, {currentUser?.displayName || currentUser?.email}</p>
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={generateBackup}
+            className="flex items-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            <span>Backup</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Métricas principales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Cotizaciones</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">{data.quotations.length}</p>
+              <p className="text-sm text-green-600 mt-2">↗ +12% vs mes anterior</p> 
+            </div>
+            <div className="p-3 bg-blue-100 rounded-full">
+              <FileText className="w-6 h-6 text-blue-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Clientes Activos</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">{data.clients.length}</p>
+              <p className="text-sm text-blue-600 mt-2">↗ +3 nuevos</p>
+            </div>
+            <div className="p-3 bg-green-100 rounded-full">
+              <Users className="w-6 h-6 text-green-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Ingresos del Mes</p>
+              <p className="text-3xl font-bold text-gray-900 mt-1">
+                ${data.quotations.filter(q => q.status === 'Facturada').reduce((sum, q) => sum + q.total, 0).toLocaleString()}
+              </p>
+              <p className="text-sm text-green-600 mt-2">↗ +8% vs mes anterior</p>
+            </div>
+            <div className="p-3 bg-purple-100 rounded-full">
+              <DollarSign className="w-6 h-6 text-purple-600import React, { useState, useEffect } from 'react';
 
 // Simulación de Firebase Auth (en producción usar Firebase Auth)
 const mockFirebaseAuth = {
   currentUser: null,
   signInWithEmailAndPassword: async (email, password) => {
-    // Simular autenticación
     const validUsers = [
       { uid: '1', email: 'admin@empresa.com', displayName: 'Administrador', role: 'admin' },
       { uid: '2', email: 'usuario@empresa.com', displayName: 'Usuario Regular', role: 'user' },
@@ -1571,7 +1295,6 @@ const mockFirebaseAuth = {
     throw new Error('Credenciales incorrectas');
   },
   createUserWithEmailAndPassword: async (email, password) => {
-    // Simular registro
     return { 
       user: { 
         uid: Date.now().toString(), 
@@ -1702,44 +1425,6 @@ const mockFirebaseData = {
       read: false,
       priority: 'high'
     }
-  ],
-  reports: [
-    {
-      id: 1,
-      name: 'Reporte Mensual Enero',
-      type: 'monthly',
-      period: '2025-01',
-      createdAt: '2025-01-31',
-      data: {
-        totalQuotations: 15,
-        totalRevenue: 2500000,
-        conversionRate: 67,
-        topClient: 'Befoods'
-      }
-    }
-  ]
-};
-
-// Datos para gráficos
-const chartData = {
-  sales: [
-    { name: 'Ene', ventas: 2400, cotizaciones: 12 },
-    { name: 'Feb', ventas: 1398, cotizaciones: 8 },
-    { name: 'Mar', ventas: 3800, cotizaciones: 15 },
-    { name: 'Abr', ventas: 3908, cotizaciones: 18 },
-    { name: 'May', ventas: 4800, cotizaciones: 22 },
-    { name: 'Jun', ventas: 3800, cotizaciones: 16 }
-  ],
-  services: [
-    { name: 'Elevadores', value: 45, color: '#8884d8' },
-    { name: 'Transporte', value: 35, color: '#82ca9d' },
-    { name: 'Personal', value: 20, color: '#ffc658' }
-  ],
-  status: [
-    { name: 'Pendientes', value: 8 },
-    { name: 'Facturadas', value: 12 },
-    { name: 'Rechazadas', value: 3 },
-    { name: 'En Proceso', value: 5 }
   ]
 };
 
@@ -1748,7 +1433,7 @@ const CotizacionesApp = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [currentView, setCurrentView] = useState('login');
   const [data, setData] = useState(mockFirebaseData);
-  const [authMode, setAuthMode] = useState('login'); // 'login', 'register', 'forgot'
+  const [authMode, setAuthMode] = useState('login');
   
   // Estados de tema y configuración
   const [theme, setTheme] = useState('blue');
@@ -1819,38 +1504,6 @@ const CotizacionesApp = () => {
   const [reportType, setReportType] = useState('monthly');
   const [reportPeriod, setReportPeriod] = useState('2025-01');
   const [generatingReport, setGeneratingReport] = useState(false);
-
-  // Hook para cargar notificaciones del sistema
-  useEffect(() => {
-    const checkReminders = () => {
-      const today = new Date();
-      const upcomingQuotations = data.quotations.filter(q => {
-        const validUntil = new Date(q.validUntil);
-        const diffTime = validUntil.getTime() - today.getTime();
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays <= 3 && diffDays > 0 && q.status === 'Pendiente';
-      });
-
-      const reminders = upcomingQuotations.map(q => ({
-        id: Date.now() + Math.random(),
-        type: 'reminder',
-        title: 'Cotización por vencer',
-        message: `La cotización ${q.number} vence en ${Math.ceil((new Date(q.validUntil).getTime() - today.getTime()) / (1000 * 60 * 60 * 24))} días`,
-        date: new Date().toISOString(),
-        read: false,
-        priority: 'high',
-        quotationId: q.id
-      }));
-
-      setSystemNotifications(prev => [...prev, ...reminders]);
-    };
-
-    if (currentUser) {
-      checkReminders();
-      const interval = setInterval(checkReminders, 24 * 60 * 60 * 1000); // Check daily
-      return () => clearInterval(interval);
-    }
-  }, [currentUser, data.quotations]);
 
   // Temas disponibles
   const themes = {
@@ -2081,7 +1734,6 @@ ${data.company.email}
   const generateReport = async () => {
     setGeneratingReport(true);
     
-    // Simular generación de reporte
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     const filteredQuotations = data.quotations.filter(q => {
@@ -2152,7 +1804,6 @@ ${reportData.conversionRate < 50 ? '• Revisar estrategia de seguimiento de cot
 • Evaluar oportunidades de cross-selling con clientes frecuentes
     `;
 
-    // Crear y descargar archivo
     const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -2203,3 +1854,168 @@ ${reportData.conversionRate < 50 ? '• Revisar estrategia de seguimiento de cot
   // Función para agregar item a cotización
   const addQuotationItem = () => {
     const currentItems = editingQuotation ? editingQuotation.items : newQuotation.items;
+    const newItem = { quantity: 1, service: '', unitPrice: 0, total: 0 };
+    
+    if (editingQuotation) {
+      setEditingQuotation(prev => ({ ...prev, items: [...currentItems, newItem] }));
+    } else {
+      setNewQuotation(prev => ({ ...prev, items: [...currentItems, newItem] }));
+    }
+  };
+
+  // Función para actualizar item de cotización
+  const updateQuotationItem = (index, field, value) => {
+    const isEditing = editingQuotation !== null;
+    const items = isEditing ? [...editingQuotation.items] : [...newQuotation.items];
+    
+    items[index][field] = value;
+    
+    if (field === 'service') {
+      const service = data.services.find(s => s.name === value);
+      items[index].unitPrice = service ? service.price : 0;
+    }
+    
+    items[index].total = items[index].quantity * items[index].unitPrice;
+    
+    if (isEditing) {
+      setEditingQuotation(prev => ({ ...prev, items }));
+    } else {
+      setNewQuotation(prev => ({ ...prev, items }));
+    }
+  };
+
+    // Función para exportar a PDF
+  const exportToPDF = (quotation) => {
+    const totals = calculateQuotationTotals(quotation.items, quotation.discount);
+    const client = data.clients.find(c => c.empresa === quotation.client);
+    
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+        <div style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px;">
+          <h1 style="color: #333; margin: 0;">${data.company.razonSocial}</h1>
+          <p style="margin: 5px 0;">${data.company.direccion} - ${data.company.ciudad}, ${data.company.region}</p>
+          <p style="margin: 5px 0;">RUT: ${data.company.rut} | Tel: ${data.company.telefono}</p>
+          <p style="margin: 5px 0;">Email: ${data.company.email}</p>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+          <div>
+            <h2 style="color: #333;">COTIZACIÓN</h2>
+            <p><strong>Número:</strong> ${quotation.number}</p>
+            <p><strong>Fecha:</strong> ${quotation.date}</p>
+            <p><strong>Válida hasta:</strong> ${quotation.validUntil}</p>
+            <p><strong>Estado:</strong> ${quotation.status}</p>
+            <p><strong>Prioridad:</strong> ${quotation.priority}</p>
+          </div>
+          <div style="text-align: right;">
+            <h3 style="color: #333;">CLIENTE</h3>
+            <p><strong>${client?.empresa || quotation.client}</strong></p>
+            <p>RUT: ${client?.rut || ''}</p>
+            <p>Contacto: ${client?.encargado || ''}</p>
+            <p>${client?.direccion || ''}</p>
+            <p>${client?.ciudad || ''}, ${client?.region || ''}</p>
+            <p>Tel: ${client?.telefono || ''}</p>
+            <p>Email: ${client?.email || ''}</p>
+          </div>
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+          <thead>
+            <tr style="background-color: #f5f5f5;">
+              <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">Cantidad</th>
+              <th style="border: 1px solid #ddd; padding: 12px; text-align: left;">Servicio</th>
+              <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">Precio Unit.</th>
+              <th style="border: 1px solid #ddd; padding: 12px; text-align: right;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${quotation.items.map(item => `
+              <tr>
+                <td style="border: 1px solid #ddd; padding: 8px;">${item.quantity}</td>
+                <td style="border: 1px solid #ddd; padding: 8px;">${item.service}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${item.unitPrice.toLocaleString()}</td>
+                <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${item.total.toLocaleString()}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        
+        ${quotation.notes ? `
+          <div style="margin-bottom: 20px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #007bff;">
+            <h4 style="margin: 0 0 10px 0; color: #333;">Notas:</h4>
+            <p style="margin: 0; color: #666;">${quotation.notes}</p>
+          </div>
+        ` : ''}
+        
+        <div style="display: flex; justify-content: flex-end;">
+          <div style="width: 350px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span>Subtotal:</span>
+              <span>${totals.subtotal.toLocaleString()}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span>IVA (19%):</span>
+              <span>${totals.iva.toLocaleString()}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span>Total Bruto:</span>
+              <span>${totals.totalBruto.toLocaleString()}</span>
+            </div>
+            ${totals.discountAmount > 0 ? `
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px; color: red;">
+                <span>Descuento (${quotation.discount}%):</span>
+                <span>-${totals.discountAmount.toLocaleString()}</span>
+              </div>
+            ` : ''}
+            <div style="display: flex; justify-content: space-between; border-top: 2px solid #333; padding-top: 8px; font-weight: bold; font-size: 18px;">
+              <span>TOTAL FINAL:</span>
+              <span>${totals.total.toLocaleString()}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top: 50px; padding: 20px; background-color: #f9f9f9; border-left: 4px solid #333;">
+          <p style="margin: 0; font-style: italic; color: #666; text-align: center; font-size: 12px;">
+            "Documento válido sólo como Cotización; No constituye venta ni recibo de dinero; No válido como documento tributario."<br>
+            Cotización válida hasta: ${quotation.validUntil} | Generada por: ${quotation.createdBy || 'Sistema'}
+          </p>
+        </div>
+      </div>
+    `;
+    
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Cotización ${quotation.number} - ${data.company.razonSocial}</title>
+          <meta charset="UTF-8">
+          <style>
+            @media print {
+              body { margin: 0; }
+              @page { 
+                margin: 1cm; 
+                size: A4;
+              }
+            }
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.4;
+              color: #333;
+            }
+          </style>
+        </head>
+        <body>
+          ${htmlContent}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    
+    setTimeout(() => {
+      if (window.confirm('¿Deseas imprimir o descargar como PDF?')) {
+        printWindow.print();
+      }
+    }, 500);
+    
+    showNotification('Cotización preparada para imprimir/PDF', 'success');
+  };
