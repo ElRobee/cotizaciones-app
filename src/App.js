@@ -41,7 +41,8 @@ import {
 } from 'lucide-react';
 
 <div className="p-3 bg-purple-100 rounded-full">
-              <DollarSign className="w-6 h-6 text-purple-600" />
+              <div>
+		<DollarSign className="w-6 h-6 text-purple-600" />
             </div>
           </div>
         </div>
