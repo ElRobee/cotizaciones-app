@@ -970,6 +970,580 @@ const mockFirebaseData = {
 };
 
 const CotizacionesApp = () => {
+// Funciones CRUD básicas
+  const startEdit = (type, item) => {
+    if (type === 'quotation') {
+      setEditingQuotation(item);
+      setModalType('quotation');
+    } else if (type === 'client') {
+      setEditingClient(item);
+      setModalType('client');
+    } else if (type === 'service') {
+      setEditingService(item);
+      setModalType('service');
+    }
+    setShowModal(true);
+  };
+
+  const cancelEdit = () => {
+    setEditingQuotation(null);
+    setEditingClient(null);
+    setEditingService(null);
+    setShowModal(false);
+    setModalType('');
+    // Reset forms
+    setNewQuotation({
+      client: '',
+      date: new Date().toISOString().split('T')[0],
+      validUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      priority: 'Media',
+      notes: '',
+      items: [{ quantity: 1, service: '', unitPrice: 0, total: 0 }],
+      discount: 0
+    });
+    setNewClient({
+      rut: '', encargado: '', empresa: '', direccion: '',
+      ciudad: '', region: '', telefono: '', email: ''
+    });
+    setNewService({ 
+      name: '', 
+      price: 0, 
+      category: 'General',
+      active: true 
+    });
+  };
+
+  const deleteItem = (type, id) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar este elemento?')) {
+      setData(prev => ({
+        ...prev,
+        [type]: prev[type].filter(item => item.id !== id)
+      }));
+      showNotification('Elemento eliminado exitosamente', 'success');
+    }
+  };
+
+  // Funciones de guardado
+  const saveQuotation = () => {
+    const quotationData = editingQuotation || newQuotation;
+    
+    if (!quotationData.client) {
+      showNotification('Por favor selecciona un cliente', 'error');
+      return;
+    }
+    
+    if (quotationData.items.length === 0 || !quotationData.items[0].service) {
+      showNotification('Por favor agrega al menos un servicio', 'error');
+      return;
+    }
+    
+    if (editingQuotation) {
+      setData(prev => ({
+        ...prev,
+        quotations: prev.quotations.map(q => 
+          q.id === editingQuotation.id 
+            ? { ...quotationData, lastModified: new Date().toISOString() }
+            : q
+        )
+      }));
+      showNotification('Cotización actualizada exitosamente', 'success');
+    } else {
+      const newId = Math.max(...data.quotations.map(q => q.id), 0) + 1;
+      const quotationNumber = `COT-${new Date().getFullYear()}-${String(newId).padStart(3, '0')}`;
+      
+      setData(prev => ({
+        ...prev,
+        quotations: [...prev.quotations, {
+          ...quotationData,
+          id: newId,
+          number: quotationNumber,
+          status: 'Pendiente',
+          createdBy: currentUser.email,
+          lastModified: new Date().toISOString()
+        }]
+      }));
+      showNotification('Cotización creada exitosamente', 'success');
+    }
+    
+    cancelEdit();
+  };
+
+  const saveClient = () => {
+    const clientData = editingClient || newClient;
+    
+    if (!clientData.rut || !clientData.empresa) {
+      showNotification('RUT y Empresa son campos obligatorios', 'error');
+      return;
+    }
+    
+    if (!validateRut(clientData.rut)) {
+      showNotification('RUT inválido', 'error');
+      return;
+    }
+    
+    if (editingClient) {
+      setData(prev => ({
+        ...prev,
+        clients: prev.clients.map(c => 
+          c.id === editingClient.id ? clientData : c
+        )
+      }));
+      showNotification('Cliente actualizado exitosamente', 'success');
+    } else {
+      const newId = Math.max(...data.clients.map(c => c.id), 0) + 1;
+      setData(prev => ({
+        ...prev,
+        clients: [...prev.clients, { 
+          ...clientData, 
+          id: newId,
+          createdAt: new Date().toISOString().split('T')[0]
+        }]
+      }));
+      showNotification('Cliente creado exitosamente', 'success');
+    }
+    
+    cancelEdit();
+  };
+
+  const saveService = () => {
+    const serviceData = editingService || newService;
+    
+    if (!serviceData.name || !serviceData.price) {
+      showNotification('Nombre y precio son campos obligatorios', 'error');
+      return;
+    }
+    
+    if (editingService) {
+      setData(prev => ({
+        ...prev,
+        services: prev.services.map(s => 
+          s.id === editingService.id ? { ...serviceData, price: Number(serviceData.price) } : s
+        )
+      }));
+      showNotification('Servicio actualizado exitosamente', 'success');
+    } else {
+      const newId = Math.max(...data.services.map(s => s.id), 0) + 1;
+      setData(prev => ({
+        ...prev,
+        services: [...prev.services, { 
+          ...serviceData, 
+          id: newId,
+          price: Number(serviceData.price)
+        }]
+      }));
+      showNotification('Servicio creado exitosamente', 'success');
+    }
+    
+    cancelEdit();
+  };
+
+  // Funciones de filtrado
+  const getFilteredClients = () => {
+    return data.clients.filter(client =>
+      client.empresa.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.encargado.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      client.rut.includes(searchTerm) ||
+      client.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const getFilteredServices = () => {
+    return data.services.filter(service =>
+      service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.category.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const getFilteredQuotations = () => {
+    return data.quotations.filter(quotation => {
+      const matchesSearch = !searchTerm || 
+        quotation.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        quotation.client.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesFilters = 
+        (!filters.status || quotation.status === filters.status) &&
+        (!filters.priority || quotation.priority === filters.priority) &&
+        (!filters.client || quotation.client === filters.client) &&
+        (!filters.dateFrom || quotation.date >= filters.dateFrom) &&
+        (!filters.dateTo || quotation.date <= filters.dateTo) &&
+        (!filters.minAmount || quotation.total >= Number(filters.minAmount)) &&
+        (!filters.maxAmount || quotation.total <= Number(filters.maxAmount));
+
+      return matchesSearch && matchesFilters;
+    });
+  };
+
+  // Componente de Vista de Autenticación
+  const AuthView = () => (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="max-w-md w-full space-y-8 p-8">
+        <div className="text-center">
+          <Building2 className="mx-auto h-12 w-12 text-blue-600" />
+          <h2 className="mt-6 text-3xl font-bold text-gray-900">
+            Sistema de Cotizaciones
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Gestiona tus cotizaciones de manera eficiente
+          </p>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          {authMode === 'login' && (
+            <form onSubmit={handleAuth} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={loginForm.email}
+                  onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="tu@email.com"
+                  required
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Contraseña
+                </label>
+                <input
+                  type="password"
+                  value={loginForm.password}
+                  onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+              
+              <button
+                type="submit"
+                className="w-full py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Iniciar Sesión
+              </button>
+            </form>
+          )}
+
+          <div className="mt-4 text-center">
+            <div className="text-xs text-gray-500 space-y-1">
+              <p>Usuarios demo:</p>
+              <p>admin@empresa.com / 123456</p>
+              <p>usuario@empresa.com / 123456</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Componente Sidebar
+  const Sidebar = () => (
+    <div className="w-64 bg-white shadow-lg h-screen">
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex items-center space-x-3">
+          <Building2 className="w-8 h-8 text-blue-600" />
+          <div>
+            <h1 className="text-lg font-bold text-gray-800">CotizApp</h1>
+            <p className="text-xs text-gray-500">Sistema de Gestión</p>
+          </div>
+        </div>
+      </div>
+      
+      <nav className="mt-6">
+        <div className="px-3 space-y-1">
+          {[
+            { id: 'dashboard', label: 'Dashboard', icon: BarChart3 },
+            { id: 'quotations', label: 'Cotizaciones', icon: FileText },
+            { id: 'clients', label: 'Clientes', icon: Users },
+            { id: 'services', label: 'Servicios', icon: Settings }
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setCurrentView(item.id)}
+              className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                currentView === item.id
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-600 hover:bg-gray-100'
+              }`}
+            >
+              <item.icon className="w-4 h-4 mr-3" />
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </nav>
+      
+      <div className="absolute bottom-0 w-64 p-4 border-t border-gray-200">
+        <div className="flex items-center space-x-3 mb-3">
+          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+            <User className="w-4 h-4 text-blue-600" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-700">{currentUser?.displayName || 'Usuario'}</p>
+            <p className="text-xs text-gray-500">{currentUser?.email}</p>
+          </div>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+        >
+          <LogOut className="w-4 h-4 mr-3" />
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  );
+
+  // Componente Dashboard
+  const DashboardView = () => {
+    const totalQuotations = data.quotations.length;
+    const pendingQuotations = data.quotations.filter(q => q.status === 'Pendiente').length;
+    const totalRevenue = data.quotations
+      .filter(q => q.status === 'Facturada')
+      .reduce((sum, q) => sum + q.total, 0);
+    const totalClients = data.clients.length;
+
+    return (
+      <div className="p-6">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+          <p className="text-gray-600">Resumen de tu actividad comercial</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Cotizaciones</p>
+                <p className="text-2xl font-bold text-gray-900">{totalQuotations}</p>
+              </div>
+              <FileText className="w-8 h-8 text-blue-600" />
+            </div>
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Pendientes</p>
+                <p className="text-2xl font-bold text-orange-600">{pendingQuotations}</p>
+              </div>
+              <Clock className="w-8 h-8 text-orange-600" />
+            </div>
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Ingresos</p>
+                <p className="text-2xl font-bold text-green-600">${totalRevenue.toLocaleString()}</p>
+              </div>
+              <DollarSign className="w-8 h-8 text-green-600" />
+            </div>
+          </div>
+          
+          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Clientes</p>
+                <p className="text-2xl font-bold text-purple-600">{totalClients}</p>
+              </div>
+              <Users className="w-8 h-8 text-purple-600" />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Cotizaciones Recientes</h3>
+            <div className="space-y-3">
+              {data.quotations.slice(0, 5).map(quotation => (
+                <div key={quotation.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-900">{quotation.number}</p>
+                    <p className="text-sm text-gray-600">{quotation.client}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-gray-900">${quotation.total.toLocaleString()}</p>
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      quotation.status === 'Pendiente' ? 'bg-yellow-100 text-yellow-800' :
+                      quotation.status === 'Facturada' ? 'bg-green-100 text-green-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {quotation.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Acciones Rápidas</h3>
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  setModalType('quotation');
+                  setShowModal(true);
+                }}
+                className="w-full flex items-center justify-center space-x-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Nueva Cotización</span>
+              </button>
+              
+              <button
+                onClick={() => {
+                  setModalType('client');
+                  setShowModal(true);
+                }}
+                className="w-full flex items-center justify-center space-x-2 p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Nuevo Cliente</span>
+              </button>
+              
+              <button
+                onClick={generateBackup}
+                className="w-full flex items-center justify-center space-x-2 p-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+              >
+                <Download className="w-4 h-4" />
+                <span>Descargar Backup</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Componente Vista de Cotizaciones
+  const QuotationsView = () => (
+    <div className="p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Cotizaciones</h1>
+        <button
+          onClick={() => {
+            setModalType('quotation');
+            setShowModal(true);
+          }}
+          className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Nueva Cotización</span>
+        </button>
+      </div>
+
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="p-4 border-b border-gray-200">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Buscar cotizaciones..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Número</th>
+                <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Cliente</th>
+                <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Fecha</th>
+                <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Total</th>
+                <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Estado</th>
+                <th className="text-left py-3 px-6 text-sm font-medium text-gray-600">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {getFilteredQuotations().map(quotation => (
+                <tr key={quotation.id} className="hover:bg-gray-50 transition-colors border-b border-gray-100">
+                  <td className="py-4 px-6 font-medium text-gray-900">{quotation.number}</td>
+                  <td className="py-4 px-6 text-gray-700">{quotation.client}</td>
+                  <td className="py-4 px-6 text-gray-600">{quotation.date}</td>
+                  <td className="py-4 px-6 font-semibold text-gray-900">${quotation.total.toLocaleString()}</td>
+                  <td className="py-4 px-6">
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      quotation.status === 'Pendiente' ? 'bg-yellow-100 text-yellow-800' :
+                      quotation.status === 'Facturada' ? 'bg-green-100 text-green-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {quotation.status}
+                    </span>
+                  </td>
+                  <td className="py-4 px-6">
+                    <div className="flex space-x-1">
+                      <button 
+                        onClick={() => startEdit('quotation', quotation)}
+                        className="p-2 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-100 rounded-lg transition-colors"
+                        title="Editar"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => exportToPDF(quotation)}
+                        className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 rounded-lg transition-colors"
+                        title="Exportar PDF"
+                      >
+                        <FileText className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => sendViaWhatsApp(quotation)}
+                        className="p-2 text-green-600 hover:text-green-800 hover:bg-green-100 rounded-lg transition-colors"
+                        title="WhatsApp"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                      </button>
+                      <button 
+                        onClick={() => deleteItem('quotations', quotation.id)}
+                        className="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 rounded-lg transition-colors"
+                        title="Eliminar"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Componente de Notificaciones
+  const NotificationContainer = () => (
+    <div className="fixed top-4 right-4 z-50 space-y-2">
+      {notifications.map(notification => (
+        <div
+          key={notification.id}
+          className={`p-4 rounded-lg shadow-lg transform transition-all duration-300 ${
+            notification.type === 'success' ? 'bg-green-100 border-green-400 text-green-700' :
+            notification.type === 'error' ? 'bg-red-100 border-red-400 text-red-700' :
+            notification.type === 'info' ? 'bg-blue-100 border-blue-400 text-blue-700' :
+            'bg-yellow-100 border-yellow-400 text-yellow-700'
+          } border-l-4 max-w-sm`}
+        >
+          <div className="flex items-center">
+            {notification.type === 'success' && <CheckCircle className="w-5 h-5 mr-2" />}
+            {notification.type === 'error' && <AlertCircle className="w-5 h-5 mr-2" />}
+            {notification.type === 'info' && <Info className="w-5 h-5 mr-2" />}
+            {notification.type === 'warning' && <AlertCircle className="w-5 h-5 mr-2" />}
+            <span className="text-sm font-medium">{notification.message}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
   // Estados principales
   const [currentUser, setCurrentUser] = useState(null);
   const [currentView, setCurrentView] = useState('login');
