@@ -289,35 +289,6 @@ const CotizacionesApp = () => {
     gray: { primary: 'gray-600', secondary: 'gray-100', accent: 'gray-400' }
   };
 
-  // Renderizado de prueba para esta primera parte
-  
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center">
-        <Building2 className="mx-auto h-16 w-16 text-blue-600 mb-4" />
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">
-          Sistema de Cotizaciones
-        </h1>
-        <p className="text-gray-600">
-          Parte 1: Configuración inicial cargada correctamente
-        </p>
-        <div className="mt-4 text-sm text-gray-500">
-          <p>Estados inicializados: {Object.keys({
-            currentUser, currentView, data, authMode, theme, darkMode, 
-            compactView, loginForm, registerForm, forgotForm, newQuotation,
-            newClient, newService, editingQuotation, editingClient, 
-            editingService, showModal, modalType, searchTerm, notifications,
-            systemNotifications, showNotificationPanel, filters, showFilters,
-            reportType, reportPeriod, generatingReport
-          }).length}</p>
-          <p>Clientes cargados: {data.clients.length}</p>
-          <p>Servicios cargados: {data.services.length}</p>
-          <p>Cotizaciones cargadas: {data.quotations.length}</p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 
 // 2. FUNCIONES AUXILIARES Y UTILITARIOS
 // ====================================
