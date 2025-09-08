@@ -318,7 +318,6 @@ const CotizacionesApp = () => {
   );
 };
 
-export default CotizacionesApp;
 
 // 2. FUNCIONES AUXILIARES Y UTILITARIOS
 // ====================================
