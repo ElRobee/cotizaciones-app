@@ -1079,7 +1079,7 @@ const DashboardView = () => {
     .reduce((sum, q) => sum + (q.total || 0), 0);
   const totalClients = data.clients.length;
 
-  
+  return (
     <div className="p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
