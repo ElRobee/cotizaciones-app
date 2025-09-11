@@ -194,6 +194,7 @@ const mockFirebaseData = {
   ]
 };
 
+const CotizacionesApp = () => {
   // PARTE 2: DECLARACIÓN DE ESTADOS Y FUNCIONES AUXILIARES
   
   // Estados principales
