@@ -2502,4 +2502,4 @@ _"Documento válido sólo como Cotización"_
   );
 }; // <- Esta llave cierra el componente CotizacionesApp
 
-export default CotizacionesApp;
+export default function CotizacionesApp() {}
