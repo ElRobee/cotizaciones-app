@@ -277,7 +277,7 @@ const CotizacionesApp = () => {
   const [showFilters, setShowFilters] = useState(false);
 
  // Funcion para fecha valida hasta suma 30 dias a la fecha:
-const calculateValidUntilDate = (fromDate) => {
+  const calculateValidUntilDate = (fromDate) => {
   const date = new Date(fromDate);
   date.setDate(date.getDate() + 30);
   return date.toISOString().split('T')[0];
