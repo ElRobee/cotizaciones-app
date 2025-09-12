@@ -2473,7 +2473,6 @@ _"Documento válido sólo como Cotización"_
   };
 
 // PARTE 9: RENDER PRINCIPAL
-
   // RENDER PRINCIPAL
   return (
     <div className="min-h-screen bg-gray-50">
@@ -2501,6 +2500,6 @@ _"Documento válido sólo como Cotización"_
       <NotificationContainer />
     </div>
   );
-};
+}; // <- Esta llave cierra el componente CotizacionesApp
 
 export default CotizacionesApp;
