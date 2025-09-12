@@ -1,4 +1,3 @@
-// PARTE 1: IMPORTS Y DATOS SIMULADOS
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   FileText, 
