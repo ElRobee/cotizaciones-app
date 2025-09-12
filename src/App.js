@@ -252,6 +252,7 @@ const CotizacionesApp = () => {
   const [editingClient, setEditingClient] = useState(null);
   const [editingService, setEditingService] = useState(null);
   const [editingCompany, setEditingCompany] = useState(null);
+  const [newCompanyLogo, setNewCompanyLogo] = useState(null);
 
   // Estados para modales y UI
   const [showModal, setShowModal] = useState(false);
@@ -276,6 +277,13 @@ const CotizacionesApp = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
 
+ // Funcion para fecha valida hasta suma 30 dias a la fecha:
+const calculateValidUntilDate = (fromDate) => {
+  const date = new Date(fromDate);
+  date.setDate(date.getDate() + 30);
+  return date.toISOString().split('T')[0];
+};
+  
   // Estados para reportes
   const [reportType, setReportType] = useState('monthly');
   const [reportPeriod, setReportPeriod] = useState('2025-01');
@@ -630,7 +638,20 @@ const CotizacionesApp = () => {
     if (companyData.theme && companyData.theme !== theme) {
       setTheme(companyData.theme);
     }
-    
+    // Actualizar Logo empresa
+const handleLogoUpload = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setNewCompanyLogo(event.target.result);
+      if (editingCompany) {
+        setEditingCompany(prev => ({ ...prev, logo: event.target.result }));
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
     showNotification('Datos de empresa actualizados exitosamente', 'success');
     cancelEdit();
   };
@@ -1651,11 +1672,23 @@ _"Documento válido sólo como Cotización"_
                     onChange={(e) => setEditingData(prev => ({ ...prev, region: e.target.value }))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
-                    <option value="Valparaíso">Valparaíso</option>
-                    <option value="Metropolitana de Santiago">Metropolitana de Santiago</option>
-                    <option value="Biobío">Biobío</option>
-                    <option value="Antofagasta">Antofagasta</option>
-                    <option value="Los Lagos">Los Lagos</option>
+                  <option value="">Seleccionar región</option>
+                  <option value="Arica y Parinacota">Arica y Parinacota</option>
+                  <option value="Tarapacá">Tarapacá</option>
+                  <option value="Antofagasta">Antofagasta</option>
+                  <option value="Atacama">Atacama</option>
+                  <option value="Coquimbo">Coquimbo</option>
+                  <option value="Valparaíso">Valparaíso</option>
+                  <option value="Metropolitana de Santiago">Metropolitana de Santiago</option>
+                  <option value="O'Higgins">O'Higgins</option>
+                  <option value="Maule">Maule</option>
+                  <option value="Ñuble">Ñuble</option>
+                  <option value="Biobío">Biobío</option>
+                  <option value="Araucanía">Araucanía</option>
+                  <option value="Los Ríos">Los Ríos</option>
+                  <option value="Los Lagos">Los Lagos</option>
+                  <option value="Aysén">Aysén</option>
+                  <option value="Magallanes">Magallanes</option>
                   </select>
                 </div>
               </div>
@@ -1700,7 +1733,39 @@ _"Documento válido sólo como Cotización"_
                   <option value="gray">Gris</option>
                 </select>
               </div>
-              
+                            
+              <div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">Logo de la Empresa</label>
+  <input
+    type="file"
+    accept="image/jpeg,image/jpg,image/png,image/gif"
+    onChange={handleLogoUpload}
+    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
+  <p className="text-xs text-gray-500 mt-1">Formatos: JPG, PNG, GIF (máx. 5MB)</p>
+  
+  {(newCompanyLogo || editingCompany?.logo) && (
+    <div className="mt-3 flex items-center space-x-3">
+      <img 
+        src={newCompanyLogo || editingCompany?.logo} 
+        alt="Logo preview" 
+        className="w-20 h-20 object-contain border border-gray-300 rounded-lg bg-gray-50"
+      />
+      <button
+        type="button"
+        onClick={() => {
+          setNewCompanyLogo(null);
+          if (editingCompany) {
+            setEditingCompany(prev => ({ ...prev, logo: null }));
+          }
+        }}
+        className="px-3 py-1 text-sm text-red-600 hover:text-red-800 border border-red-300 rounded-lg hover:bg-red-50"
+      >
+        Eliminar
+      </button>
+    </div>
+  )}
+</div>             
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Moneda</label>
                 <select
@@ -1808,15 +1873,16 @@ _"Documento válido sólo como Cotización"_
                 <label className="block text-sm font-medium text-gray-700 mb-2">Válida Hasta</label>
                 <input
                   type="date"
-                  value={quotationData.validUntil}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (isEditing) {
-                      setEditingQuotation(prev => ({ ...prev, validUntil: value }));
-                    } else {
-                      setNewQuotation(prev => ({ ...prev, validUntil: value }));
-                    }
-                  }}
+  value={quotationData.date}
+  onChange={(e) => {
+    const value = e.target.value;
+    const newValidUntil = calculateValidUntilDate(value);
+    if (isEditing) {
+      setEditingQuotation(prev => ({ ...prev, date: value, validUntil: newValidUntil }));
+    } else {
+      setNewQuotation(prev => ({ ...prev, date: value, validUntil: newValidUntil }));
+    }
+  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
