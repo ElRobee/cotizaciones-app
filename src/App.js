@@ -977,3 +977,7 @@ const CotizacionesApp = () => {
   }, []);
 
   return (
+  );
+};
+
+export default CotizacionesApp;
