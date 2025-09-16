@@ -285,7 +285,6 @@ const CotizacionesApp = () => {
   const [reportPeriod, setReportPeriod] = useState('2025-01');
   const [generatingReport, setGeneratingReport] = useState(false);
 
-  return (
 
 // PARTE 2 - FUNCIONES AUXILIARES Y UTILITARIOS
 
