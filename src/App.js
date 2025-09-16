@@ -285,8 +285,7 @@ const CotizacionesApp = () => {
   const [reportPeriod, setReportPeriod] = useState('2025-01');
   const [generatingReport, setGeneratingReport] = useState(false);
 
-  return (
-
+ 
 // PARTE 2 - FUNCIONES AUXILIARES Y UTILITARIOS
 
 // TEMAS DISPONIBLES
@@ -307,7 +306,8 @@ const CotizacionesApp = () => {
     const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     return `${formattedBody}-${dv}`;
   }, []);
-
+ return (
+   
   // FUNCIÓN PARA VALIDAR RUT
   const validateRut = useCallback((rut) => {
     const cleanRut = rut.replace(/[^\dkK]/g, '');
