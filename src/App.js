@@ -555,8 +555,6 @@ const CotizacionesApp = () => {
     return errors;
   }, []);
 
-  return (
-
 
 // PARTE 3 - FUNCIONES CRUD Y GESTIÓN DE ESTADOS
 
@@ -974,8 +972,6 @@ const CotizacionesApp = () => {
   const calculateQuotationTotals = useCallback((items, discount) => {
     return { total: 0, subtotal: 0, iva: 0, totalBruto: 0, discountAmount: 0 };
   }, []);
-
-  return (
 
 
 // PARTE 4 - FUNCIONES DE EXPORTACIÓN, WHATSAPP Y AUTENTICACIÓN
@@ -1422,8 +1418,6 @@ _"Documento válido sólo como Cotización"_
     signOut: async () => Promise.resolve(),
     sendPasswordResetEmail: async (email) => Promise.resolve()
   }), []);
-
-  return (
 
 
 // PARTE 5 - COMPONENTES DE INTERFAZ PRINCIPALES
@@ -1877,9 +1871,7 @@ _"Documento válido sólo como Cotización"_
     console.log('Backup generated');
   }, []);
 
-  return (
-
-
+ 
 // PARTE 6 - VISTAS PRINCIPALES DEL SISTEMA
 
 // VISTA DE COTIZACIONES
