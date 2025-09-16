@@ -329,15 +329,15 @@ const CotizacionesApp = () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }, []);
 
-  // FUNCIÓN PARA MOSTRAR NOTIFICACIONES
-  const showNotification = useCallback((message, type = 'success') => {
-    const id = Date.now();
-    const notification = { id, message, type };
-    setNotifications(prev => [...prev, notification]);
-    setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== id));
-    }, 4000);
-  }, []);
+ // FUNCIÓN PARA MOSTRAR NOTIFICACIONES
+const triggerNotification = useCallback((message, type = 'success') => {
+  const id = Date.now();
+  const notification = { id, message, type };
+  setNotifications(prev => [...prev, notification]);
+  setTimeout(() => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  }, 4000);
+}, []);
 
   // FUNCIÓN PARA CALCULAR TOTALES DE COTIZACIÓN
   const calculateQuotationTotals = useCallback((items, discount = 0) => {
@@ -424,7 +424,7 @@ const CotizacionesApp = () => {
       createdBy: ''
     });
     setSearchTerm('');
-    showNotification('Filtros limpiados', 'info');
+    triggerNotification('Filtros limpiados', 'info');
   }, [showNotification]);
 
   // FUNCIÓN PARA GENERAR NÚMERO DE COTIZACIÓN
@@ -646,7 +646,7 @@ const CotizacionesApp = () => {
       }));
       
       const message = successMessages[type] || 'Elemento eliminado exitosamente';
-      showNotification(message, 'success');
+      triggerNotification(message, 'success');
     }
   }, []);
 
@@ -657,7 +657,7 @@ const CotizacionesApp = () => {
     // Validar datos básicos
     const errors = validateQuotationForm(quotationData);
     if (errors.length > 0) {
-      showNotification(errors[0], 'error');
+      triggerNotification(errors[0], 'error');
       return;
     }
     
@@ -678,7 +678,7 @@ const CotizacionesApp = () => {
             : q
         )
       }));
-      showNotification('Cotización actualizada exitosamente', 'success');
+      triggerNotification('Cotización actualizada exitosamente', 'success');
     } else {
       // Crear nueva cotización
       const newId = Math.max(...(data?.quotations?.map(q => q.id) || [0]), 0) + 1;
@@ -696,7 +696,7 @@ const CotizacionesApp = () => {
           lastModified: new Date().toISOString()
         }]
       }));
-      showNotification('Cotización creada exitosamente', 'success');
+      triggerNotification('Cotización creada exitosamente', 'success');
     }
     
     cancelEdit();
@@ -709,7 +709,7 @@ const CotizacionesApp = () => {
     // Validar datos del cliente
     const errors = validateClientForm(clientData, !!editingClient, data?.clients || []);
     if (errors.length > 0) {
-      showNotification(errors[0], 'error');
+      triggerNotification(errors[0], 'error');
       return;
     }
     
@@ -721,7 +721,7 @@ const CotizacionesApp = () => {
           c.id === editingClient.id ? { ...clientData, id: editingClient.id } : c
         )
       }));
-      showNotification('Cliente actualizado exitosamente', 'success');
+      triggerNotification('Cliente actualizado exitosamente', 'success');
     } else {
       // Crear nuevo cliente
       const newId = Math.max(...(data?.clients?.map(c => c.id) || [0]), 0) + 1;
@@ -733,7 +733,7 @@ const CotizacionesApp = () => {
           createdAt: new Date().toISOString().split('T')[0]
         }]
       }));
-      showNotification('Cliente creado exitosamente', 'success');
+      triggerNotification('Cliente creado exitosamente', 'success');
     }
     
     cancelEdit();
@@ -746,7 +746,7 @@ const CotizacionesApp = () => {
     // Validar datos del servicio
     const errors = validateServiceForm(serviceData, !!editingService, data?.services || []);
     if (errors.length > 0) {
-      showNotification(errors[0], 'error');
+      triggerNotification(errors[0], 'error');
       return;
     }
     
@@ -762,7 +762,7 @@ const CotizacionesApp = () => {
           } : s
         )
       }));
-      showNotification('Servicio actualizado exitosamente', 'success');
+      triggerNotification('Servicio actualizado exitosamente', 'success');
     } else {
       // Crear nuevo servicio
       const newId = Math.max(...(data?.services?.map(s => s.id) || [0]), 0) + 1;
@@ -774,7 +774,7 @@ const CotizacionesApp = () => {
           price: Number(serviceData.price)
         }]
       }));
-      showNotification('Servicio creado exitosamente', 'success');
+      triggerNotification('Servicio creado exitosamente', 'success');
     }
     
     cancelEdit();
@@ -784,17 +784,17 @@ const CotizacionesApp = () => {
   const saveCompany = useCallback((companyData) => {
     // Validar datos de empresa
     if (!companyData.razonSocial || !companyData.rut) {
-      showNotification('Razón Social y RUT son campos obligatorios', 'error');
+      triggerNotification('Razón Social y RUT son campos obligatorios', 'error');
       return;
     }
     
     if (!validateRut(companyData.rut)) {
-      showNotification('RUT de empresa inválido', 'error');
+      triggerNotification('RUT de empresa inválido', 'error');
       return;
     }
     
     if (companyData.email && !validateEmail(companyData.email)) {
-      showNotification('Email de empresa inválido', 'error');
+      triggerNotification('Email de empresa inválido', 'error');
       return;
     }
     
@@ -803,7 +803,7 @@ const CotizacionesApp = () => {
       company: { ...prev.company, ...companyData }
     }));
     
-    showNotification('Datos de empresa actualizados exitosamente', 'success');
+    triggerNotification('Datos de empresa actualizados exitosamente', 'success');
     cancelEdit();
   }, [cancelEdit]);
 
@@ -828,7 +828,7 @@ const CotizacionesApp = () => {
     };
     
     const message = statusMessages[newStatus] || `Estado cambiado a ${newStatus}`;
-    showNotification(message, 'success');
+    triggerNotification(message, 'success');
   }, []);
 
   // FUNCIONES DE MANEJO DE ÍTEMS DE COTIZACIÓN
@@ -916,7 +916,7 @@ const CotizacionesApp = () => {
       quotations: [...prev.quotations, duplicatedQuotation]
     }));
     
-    showNotification('Cotización duplicada exitosamente', 'success');
+    triggerNotification('Cotización duplicada exitosamente', 'success');
   }, [data?.quotations, currentUser]);
 
   // FUNCIÓN PARA OBTENER ESTADÍSTICAS
@@ -979,7 +979,7 @@ const CotizacionesApp = () => {
 // FUNCIONES DE EXPORTACIÓN Y ENVÍO POR WHATSAPP
   const sendViaWhatsApp = useCallback((quotation) => {
     if (!quotation || !data?.clients) {
-      showNotification('Error al preparar la cotización para WhatsApp', 'error');
+      triggerNotification('Error al preparar la cotización para WhatsApp', 'error');
       return;
     }
 
@@ -1031,13 +1031,13 @@ _"Documento válido sólo como Cotización"_
     }
     
     window.open(whatsappUrl, '_blank');
-    showNotification('Abriendo WhatsApp...', 'info');
+    triggerNotification('Abriendo WhatsApp...', 'info');
   }, [data?.clients, data?.company]);
 
   // FUNCIÓN DE EXPORTACIÓN A PDF
   const exportToPDF = useCallback((quotation) => {
     if (!quotation || !data?.clients || !data?.company) {
-      showNotification('Error al preparar la cotización para PDF', 'error');
+      triggerNotification('Error al preparar la cotización para PDF', 'error');
       return;
     }
 
@@ -1169,16 +1169,16 @@ _"Documento válido sólo como Cotización"_
         }
       }, 500);
       
-      showNotification('Cotización preparada para imprimir/PDF', 'success');
+      triggerNotification('Cotización preparada para imprimir/PDF', 'success');
     } else {
-      showNotification('Error al abrir ventana de impresión', 'error');
+      triggerNotification('Error al abrir ventana de impresión', 'error');
     }
   }, [data?.clients, data?.company]);
 
   // FUNCIÓN DE BACKUP COMPLETO
   const generateBackup = useCallback(() => {
     if (!data) {
-      showNotification('No hay datos para respaldar', 'error');
+      triggerNotification('No hay datos para respaldar', 'error');
       return;
     }
 
@@ -1206,9 +1206,9 @@ _"Documento válido sólo como Cotización"_
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
-      showNotification('Backup generado exitosamente', 'success');
+      triggerNotification('Backup generado exitosamente', 'success');
     } catch (error) {
-      showNotification('Error al generar backup', 'error');
+      triggerNotification('Error al generar backup', 'error');
     }
   }, [data]);
 
@@ -1237,10 +1237,10 @@ _"Documento válido sólo como Cotización"_
             users: backupData.users || []
           });
           
-          showNotification('Backup restaurado exitosamente', 'success');
+          triggerNotification('Backup restaurado exitosamente', 'success');
         }
       } catch (error) {
-        showNotification('Error al restaurar backup: Archivo inválido', 'error');
+        triggerNotification('Error al restaurar backup: Archivo inválido', 'error');
       }
     };
     
@@ -1257,12 +1257,12 @@ _"Documento válido sólo como Cotización"_
     try {
       if (authMode === 'login') {
         if (!validateEmail(loginForm.email)) {
-          showNotification('Por favor ingresa un email válido', 'error');
+          triggerNotification('Por favor ingresa un email válido', 'error');
           return;
         }
         
         if (!loginForm.password) {
-          showNotification('Por favor ingresa tu contraseña', 'error');
+          triggerNotification('Por favor ingresa tu contraseña', 'error');
           return;
         }
         
@@ -1274,26 +1274,26 @@ _"Documento válido sólo como Cotización"_
         
         setCurrentUser(result.user);
         setCurrentView('dashboard');
-        showNotification(`¡Bienvenido ${result.user.displayName}!`, 'success');
+        triggerNotification(`¡Bienvenido ${result.user.displayName}!`, 'success');
         
       } else if (authMode === 'register') {
         if (!validateEmail(registerForm.email)) {
-          showNotification('Por favor ingresa un email válido', 'error');
+          triggerNotification('Por favor ingresa un email válido', 'error');
           return;
         }
         
         if (registerForm.password !== registerForm.confirmPassword) {
-          showNotification('Las contraseñas no coinciden', 'error');
+          triggerNotification('Las contraseñas no coinciden', 'error');
           return;
         }
         
         if (registerForm.password.length < 6) {
-          showNotification('La contraseña debe tener al menos 6 caracteres', 'error');
+          triggerNotification('La contraseña debe tener al menos 6 caracteres', 'error');
           return;
         }
         
         if (!registerForm.name.trim()) {
-          showNotification('Por favor ingresa tu nombre', 'error');
+          triggerNotification('Por favor ingresa tu nombre', 'error');
           return;
         }
         
@@ -1302,23 +1302,23 @@ _"Documento válido sólo como Cotización"_
           registerForm.password
         );
         
-        showNotification('Usuario registrado exitosamente', 'success');
+        triggerNotification('Usuario registrado exitosamente', 'success');
         setAuthMode('login');
         setRegisterForm({ email: '', password: '', confirmPassword: '', name: '' });
         
       } else if (authMode === 'forgot') {
         if (!validateEmail(forgotForm.email)) {
-          showNotification('Por favor ingresa un email válido', 'error');
+          triggerNotification('Por favor ingresa un email válido', 'error');
           return;
         }
         
         await mockFirebaseAuth.sendPasswordResetEmail(forgotForm.email);
-        showNotification('Se ha enviado un email para restablecer tu contraseña', 'info');
+        triggerNotification('Se ha enviado un email para restablecer tu contraseña', 'info');
         setAuthMode('login');
         setForgotForm({ email: '' });
       }
     } catch (error) {
-      showNotification(error.message || 'Error en autenticación', 'error');
+      triggerNotification(error.message || 'Error en autenticación', 'error');
     }
   }, [authMode, loginForm, registerForm, forgotForm]);
 
@@ -1334,9 +1334,9 @@ _"Documento válido sólo como Cotización"_
       setRegisterForm({ email: '', password: '', confirmPassword: '', name: '' });
       setForgotForm({ email: '' });
       
-      showNotification('Sesión cerrada exitosamente', 'info');
+      triggerNotification('Sesión cerrada exitosamente', 'info');
     } catch (error) {
-      showNotification('Error al cerrar sesión', 'error');
+      triggerNotification('Error al cerrar sesión', 'error');
     }
   }, []);
 
@@ -1348,13 +1348,13 @@ _"Documento válido sólo como Cotización"_
     // Validar tipo de archivo
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
     if (!allowedTypes.includes(file.type)) {
-      showNotification('Solo se permiten archivos JPG, PNG o GIF', 'error');
+      triggerNotification('Solo se permiten archivos JPG, PNG o GIF', 'error');
       return;
     }
 
     // Validar tamaño (5MB máximo)
     if (file.size > 5 * 1024 * 1024) {
-      showNotification('El archivo es demasiado grande (máximo 5MB)', 'error');
+      triggerNotification('El archivo es demasiado grande (máximo 5MB)', 'error');
       return;
     }
 
@@ -1367,7 +1367,7 @@ _"Documento válido sólo como Cotización"_
         setEditingCompany(prev => ({ ...prev, logo: logoData }));
       }
       
-      showNotification('Logo cargado exitosamente', 'success');
+      triggerNotification('Logo cargado exitosamente', 'success');
     };
     
     reader.readAsDataURL(file);
@@ -2368,17 +2368,17 @@ _"Documento válido sólo como Cotización"_
 
     const handleSave = () => {
       if (!editingData.razonSocial || !editingData.rut) {
-        showNotification('Razón Social y RUT son campos obligatorios', 'error');
+        triggerNotification('Razón Social y RUT son campos obligatorios', 'error');
         return;
       }
       
       if (!validateRut(editingData.rut)) {
-        showNotification('RUT de empresa inválido', 'error');
+        triggerNotification('RUT de empresa inválido', 'error');
         return;
       }
       
       if (editingData.email && !validateEmail(editingData.email)) {
-        showNotification('Email de empresa inválido', 'error');
+        triggerNotification('Email de empresa inválido', 'error');
         return;
       }
       
@@ -2387,13 +2387,13 @@ _"Documento válido sólo como Cotización"_
         company: { ...prev.company, ...editingData, logo: logoFile || editingData.logo }
       }));
       
-      showNotification('Datos de empresa actualizados exitosamente', 'success');
+      triggerNotification('Datos de empresa actualizados exitosamente', 'success');
     };
 
     const handleReset = () => {
       setEditingData(data?.company || {});
       setLogoFile(null);
-      showNotification('Cambios descartados', 'info');
+      triggerNotification('Cambios descartados', 'info');
     };
 
     const handleLogoUpload = (e) => {
@@ -2402,12 +2402,12 @@ _"Documento válido sólo como Cotización"_
 
       const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
       if (!allowedTypes.includes(file.type)) {
-        showNotification('Solo se permiten archivos JPG, PNG o GIF', 'error');
+        triggerNotification('Solo se permiten archivos JPG, PNG o GIF', 'error');
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
-        showNotification('El archivo es demasiado grande (máximo 5MB)', 'error');
+        triggerNotification('El archivo es demasiado grande (máximo 5MB)', 'error');
         return;
       }
 
@@ -2415,7 +2415,7 @@ _"Documento válido sólo como Cotización"_
       reader.onload = (event) => {
         setLogoFile(event.target.result);
         setEditingData(prev => ({ ...prev, logo: event.target.result }));
-        showNotification('Logo cargado exitosamente', 'success');
+        triggerNotification('Logo cargado exitosamente', 'success');
       };
       
       reader.readAsDataURL(file);
